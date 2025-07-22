@@ -1,3 +1,5 @@
+from _datetime import datetime
+
 import httpx
 
 from src.config import settings
@@ -16,5 +18,5 @@ async def fetch_weather_from_api(city_name: str) -> TemperatureBase:
         data = response.json()
         return TemperatureBase(
             temperature=data["current"]["temp_c"],
-            date_time=data["current"]["last_updated"]
+            date_time=datetime.strptime(data["current"]["last_updated"], "%Y-%m-%d %H:%M")
         )
