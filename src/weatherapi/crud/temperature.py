@@ -5,6 +5,18 @@ from src.weatherapi.crud.city import get_city_list
 from src.weatherapi.models.temperature import Temperature
 from src.weatherapi.schemas.temperature import TemperatureCreate
 from src.weatherapi.service import fetch_weather_from_api
+
+
+async def get_list_temperature(session: AsyncSession, skip: int = 0, limit: int = 10) -> list[Temperature]:
+    result = await session.execute(select(Temperature).offset(skip).limit(limit))
+    return list(result.scalars().all())
+
+
+async def get_temperatures_by_city_id(session: AsyncSession, city_id: int):
+    result = await session.execute(select(Temperature).where(Temperature.city_id == city_id))
+    return result.scalars().all()
+
+
 async def update_temperature_in_cities(session: AsyncSession) -> dict:
     cities = await get_city_list(session=session)
 
