@@ -1,11 +1,11 @@
 from pydantic import BaseModel, Field
 
-from src.weatherapi.schemas.temperature import TemperatureRead
+from src.weatherapi.schemas.temperature import TemperatureBase
 
 
 class CityBase(BaseModel):
     name: str = Field(..., frozen=True, max_length=128)
-    additional_info: str
+    additional_info: str | None = None
 
 
 class CityCreate(CityBase):
@@ -14,7 +14,13 @@ class CityCreate(CityBase):
 
 class CityRead(CityBase):
     id: int
-    temperatures: list[TemperatureRead] | None = None
+
+    class Config:
+        from_attributes = True
+
+
+class CityReadWithTemperatures(CityRead):
+    temperatures: list[TemperatureBase] | None = None
 
     class Config:
         from_attributes = True
