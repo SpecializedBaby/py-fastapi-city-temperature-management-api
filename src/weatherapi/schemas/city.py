@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from temperature.schemas import TemperatureRead
+from src.weatherapi.schemas.temperature import TemperatureRead
 
 
 class CityBase(BaseModel):

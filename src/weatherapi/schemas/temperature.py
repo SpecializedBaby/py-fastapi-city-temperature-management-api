@@ -2,7 +2,7 @@ import datetime
 
 from pydantic import BaseModel, Field
 
-from city.schemas import CityRead
+from src.weatherapi.schemas.city import CityRead
 
 
 class TemperatureBase(BaseModel):
