@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
@@ -14,10 +16,12 @@ async def update_weather_data_in_cities(session: AsyncSession = Depends(get_sess
 
 
 @temperature_router.get("/temperatures/", response_model=list[TemperatureRead])
-async def get_all_temperatures(session: AsyncSession = Depends(get_session), skip: int = 0, limit: int = 10):
+async def get_temperatures(
+    session: AsyncSession = Depends(get_session),
+    city_id: Optional[int] = Query(None),
+    skip: int = 0,
+    limit: int = 10,
+):
+    if city_id is not None:
+        return await get_temperatures_by_city_id(city_id=city_id, session=session)
     return await get_list_temperature(session=session, skip=skip, limit=limit)
-
-
-@temperature_router.get("/temperatures/", response_model=list[TemperatureRead])
-async def get_temperatures_by_city(city_id: int, session: AsyncSession = Depends(get_session)):
-    return await get_temperatures_by_city_id(city_id=city_id, session=session)

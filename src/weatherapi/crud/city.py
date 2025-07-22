@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -28,6 +29,11 @@ async def get_city_list(session: AsyncSession):
 
 async def delete_city_by_id(session: AsyncSession, city_id: int) -> dict:
     city = await session.get(City, city_id)
+    if not city:
+        raise HTTPException(
+            status_code=404,
+            detail=f"City with ID {city_id} not found"
+        )
     await session.delete(city)
     await session.commit()
     return {"delete": "Success"}
