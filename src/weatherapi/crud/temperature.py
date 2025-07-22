@@ -1,5 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from src.weatherapi.crud.city import get_city_list
 from src.weatherapi.models.temperature import Temperature
@@ -8,7 +9,9 @@ from src.weatherapi.service import fetch_weather_from_api
 
 
 async def get_list_temperature(session: AsyncSession, skip: int = 0, limit: int = 10) -> list[Temperature]:
-    result = await session.execute(select(Temperature).offset(skip).limit(limit))
+    result = await session.execute(
+        select(Temperature).options(selectinload(Temperature.city))
+        .offset(skip).limit(limit))
     return list(result.scalars().all())
 
 
