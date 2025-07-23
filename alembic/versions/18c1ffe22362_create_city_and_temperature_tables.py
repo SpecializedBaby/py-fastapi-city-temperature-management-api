@@ -29,7 +29,7 @@ def upgrade() -> None:
     sa.UniqueConstraint('name')
     )
     op.create_table('temperature_table',
-    sa.Column('date_time', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
+    sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('temperature', sa.Float(), nullable=False),
     sa.Column('city_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
